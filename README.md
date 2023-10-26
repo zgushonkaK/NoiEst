@@ -1,10 +1,11 @@
 # NoiEst
 
 1. [Источники](#источники)
-2. [Задачи](#задачи)
-3. [Вопросы](#вопросы)
-4. [Расчёты](#расчёты)
-5. [Визуализация](#визуализация)
+2. [Участники](#участники)
+3. [Задачи](#задачи)
+4. [Вопросы](#вопросы)
+5. [Расчёты](#расчёты)
+6. [Визуализация](#визуализация)
 
 ## Источники
 описание измеряемых параметров
@@ -16,6 +17,13 @@
 пример ПО - посмотреть, какие GUI делают в таких задачах	https://www.researchgate.net/publication/361718292_iQMetrix-CT_New_software_for_task-based_image_quality_assessment_of_phantom_CT_images
 
 пример проекта на matlab для расчета характеристик	https://gitlab.oit.duke.edu/railabs/SameiResearchGroup/imquest
+
+## Участники
+### Лебкова Марина:
+- [Ссылка](https://github.com/hedanta/misis2023f-22-02-lebkova-m-d) на личное хранилище
+- реализация расчёта и визуализации карты шумов, гистограммы карты шумов, маскирования шумового изображения на области с высокой и низкой частотой шума
+
+### Гороховатский Всеволод
 
 ## Задачи
 - [x] изучить разделы "2.D. Quantum noise assessment" и "APPENDIX: AUTOCORRELATION ALGORITHM" статьи "Quantum noise properties of CT images with anatomical textured backgrounds across reconstruction algorithms: FBP and SAFIRE"
