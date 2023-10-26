@@ -24,6 +24,8 @@
 - реализация расчёта и визуализации карты шумов, гистограммы карты шумов, маскирования шумового изображения на области с высокой и низкой частотой шума
 
 ### Гороховатский Всеволод
+- [Ссылка](https://github.com/zgushonkaK/misis2023f-22-02-gorokhovatskii-v-m) на личное хранилище
+- реализация алгоритма расчёта автокорреляции с последующими преобразованиями и визуализация кривых спектра шумов
 
 ## Задачи
 - [x] изучить разделы "2.D. Quantum noise assessment" и "APPENDIX: AUTOCORRELATION ALGORITHM" статьи "Quantum noise properties of CT images with anatomical textured backgrounds across reconstruction algorithms: FBP and SAFIRE"
