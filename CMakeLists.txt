@@ -1,0 +1,34 @@
+﻿cmake_minimum_required (VERSION 3.21)
+
+set(CMAKE_VERBOSE_MAKEFILE True)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True) 
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/bin.dbg)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/bin.rel)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_CURRENT_SOURCE_DIR}/bin.relwithdbg)
+
+project(noi_est)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+add_subdirectory(src)
+
+install(FILES pics/cat.jpg DESTINATION bin)
+install(TARGETS noi_est DESTINATION bin)
+
+add_custom_target(install_${PROJECT_NAME}
+        ${CMAKE_COMMAND} -DCMAKE_INSTALL_CONFIG_NAME=${CMAKE_BUILD_TYPE}
+        -P cmake_install.cmake
+        )
+
+install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/
+        DESTINATION bin/
+        FILES_MATCHING 
+        PATTERN "*.dll"
+        PATTERN "*.so")
+
+file(GLOB RESOURCES "cat.png")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pics/cat.png
+   ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
