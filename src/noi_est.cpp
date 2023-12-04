@@ -212,7 +212,7 @@ cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
 }
 
 void NoiEst::OrigRoi() {
-  roi_ = RoundRoi(mat2gray(noise_));
+  roi_ = RoundRoi(noise_);
 }
 
 void NoiEst::LowNoiseMask() {
