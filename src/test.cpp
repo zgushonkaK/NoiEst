@@ -27,7 +27,7 @@ std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
   return noisy_images;
 };
 
-int main() {
+int main(int argc, char* argv[]) {
   cv::Mat image = cv::imread("cat.png", cv::IMREAD_GRAYSCALE);
   cv::Mat image_32f = cv::Mat::zeros(image.size(), CV_32FC1);
   image.convertTo(image_32f, CV_32FC1);
@@ -37,6 +37,13 @@ int main() {
   image_32f = ensemble[0];
 
   NoiEst alg = NoiEst(image_32f, ensemble, amount);
+  
+  if (argc == 2){
+    float threshold = std::atof(argv[1]);
+    if (threshold > 0 && threshold < 1.0){
+      alg.SetThresh(threshold);
+    }
+  }
   alg.Calculate();
   alg.DefaultSave();
   return 0;

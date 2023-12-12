@@ -219,4 +219,6 @@ public:
   * @brief Сохраняет все поля экземпляра в файлы
   */
   const void DefaultSave();
+
+  void SetThresh(float thresh);
 };

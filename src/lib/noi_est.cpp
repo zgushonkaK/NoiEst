@@ -399,3 +399,5 @@ const void NoiEst::DefaultSave() {
   Save(nps_low_r_, "nps_low_r");
   Save(nps_high_r_, "nps_high_r");
 }
+
+void NoiEst::SetThresh(float thresh){thresh_ = std::move(thresh);}
