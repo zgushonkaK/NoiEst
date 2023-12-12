@@ -220,5 +220,8 @@ public:
   */
   const void DefaultSave();
 
+  /*!
+  * @brief Позволяет установить порог
+  */
   void SetThresh(float thresh);
 };
