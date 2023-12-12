@@ -15,8 +15,11 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_subdirectory(src)
 
-install(FILES pics/cat.jpg DESTINATION bin)
+install(FILES pics/cat.png DESTINATION bin)
 install(TARGETS noi_est DESTINATION bin)
+
+find_package(Doxygen)
+option(BUILD_DOC "Build documentation" ON)
 
 add_custom_target(install_${PROJECT_NAME}
         ${CMAKE_COMMAND} -DCMAKE_INSTALL_CONFIG_NAME=${CMAKE_BUILD_TYPE}
@@ -32,3 +35,22 @@ install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/
 file(GLOB RESOURCES "cat.png")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pics/cat.png
    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+if (DOXYGEN_FOUND)
+# set input and output files
+set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+# request to configure the file
+configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+message("Doxygen build started")
+
+add_custom_target( doc_doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM )
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc DESTINATION .)
+else (DOXYGEN_FOUND)
+   message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)

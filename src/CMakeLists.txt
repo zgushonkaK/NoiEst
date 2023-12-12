@@ -1,2 +1,4 @@
-add_executable(noi_est noi_est.cpp)
-target_link_libraries(noi_est ${OpenCV_LIBS})
+add_subdirectory(lib)
+
+add_executable(test_app test.cpp)
+target_link_libraries(test_app ${OpenCV_LIBS} noi_est)

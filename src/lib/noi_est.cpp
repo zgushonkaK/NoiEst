@@ -1,77 +1,4 @@
-﻿#include <iostream>
-#include <vector>
-#include <opencv2/opencv.hpp>
-
-class NoiEst{
-private:
-  cv::Mat image_32f_;
-  int amount_;
-  std::vector<cv::Mat> ensemble_;
-
-  float thresh_ = 0.5;
-  float max_val_ = 1.0;
-
-  cv::Mat ens_mean_;
-  cv::Mat noise_map_;
-  cv::Mat noise_hist_;
-  cv::Mat noise_;
-  cv::Mat roi_;
-  cv::Mat n_low_;
-  cv::Mat n_high_;
-  cv::Mat m_low_;
-  cv::Mat m_high_;
-  cv::Mat rn_low_;
-  cv::Mat rn_high_;
-  cv::Mat rm_low_;
-  cv::Mat rm_high_;
-  cv::Mat r_low_;
-  cv::Mat r_high_;
-  cv::Mat nps_low_;
-  cv::Mat nps_high_;
-  cv::Mat nps_low_r_;
-  cv::Mat nps_high_r_;
-
-public:
-  NoiEst(cv::Mat image_32f, std::vector<cv::Mat> ensemble, int amount);
-  ~NoiEst();
-
-  cv::Mat mat2gray(const cv::Mat& image);
-  void EnsembleMean();
-  void CreateNoiseMap();
-  void ImageNoise();
-  cv::Mat RoundRoi(const cv::Mat& image_32f);
-  void OrigRoi();
-  void NoiseHist();
-  void LowNoiseMask();
-  void HighNoiseMask();
-  void LowNoise();
-  void HighNoise();
-
-  const cv::Mat CrossCorrelation(const cv::Mat& image1, const cv::Mat& image2);
-  void LowNoiseCorrelation();
-  void LowMaskCorrelation();
-  void HighNoiseCorrelation();
-  void HighMaskCorrelation();
-
-  const cv::Mat AutoCorrelation(const cv::Mat& noise, const cv::Mat& mask);
-  void LowCorrelation();
-  void HighCorrelation();
-
-  const cv::Mat Dft(const cv::Mat& image_32f);
-  void LowDft();
-  void HighDft();
-
-  const cv::Mat RadialPlot(const cv::Mat& image);
-  void LowNps();
-  void HighNps();
-
-  const void Calculate();
-
-  const void Show(const cv::Mat& image, const std::string& name);
-  const void Save(const cv::Mat& image, const std::string& name);
-
-  const void DefaultSave();
-};
+#include "noi_est.hpp"
 
 NoiEst::NoiEst(cv::Mat image_32f, std::vector<cv::Mat> ensemble, int amount) {
   image_32f_ = image_32f;
@@ -197,8 +124,8 @@ cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
   cv::Mat roi_img_8bit = cv::Mat::zeros(image.size(), image.type());
   cv::Mat roi_img = cv::Mat::zeros(image_32f_.size(), image_32f_.type());
 
-  double r_out = 60;
-  double r_in = 10;
+  double r_out = 120;
+  double r_in = 40;
 
   cv::circle(out_circle, cv::Point(mask.cols / 2, mask.rows / 2), r_out, (255, 255, 255), cv::FILLED);
   cv::circle(in_circle, cv::Point(mask.cols / 2, mask.rows / 2), r_in, (255, 255, 255), cv::FILLED);
@@ -212,7 +139,7 @@ cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
 }
 
 void NoiEst::OrigRoi() {
-  roi_ = RoundRoi(noise_);
+  roi_ = RoundRoi(mat2gray(noise_));
 }
 
 void NoiEst::LowNoiseMask() {
@@ -253,7 +180,7 @@ void NoiEst::HighNoise() {
   n_high_ = n_high;
 }
 
-const cv::Mat NoiEst::CrossCorrelation(const cv::Mat& image1, const cv::Mat& image2) {
+const cv::Mat NoiEst::Correlation(const cv::Mat& image1, const cv::Mat& image2) {
   CV_Assert(image1.size() == image2.size());
 
   cv::Mat result(image1.size(), CV_32FC1, cv::Scalar(0));
@@ -267,19 +194,19 @@ const cv::Mat NoiEst::CrossCorrelation(const cv::Mat& image1, const cv::Mat& ima
 }
 
 void NoiEst::LowNoiseCorrelation() {
-  rn_low_ = CrossCorrelation(n_low_, noise_);
+  rn_low_ = Correlation(n_low_, noise_);
 }
 
 void NoiEst::HighNoiseCorrelation() {
-  rn_high_ = CrossCorrelation(n_high_, noise_);
+  rn_high_ = Correlation(n_high_, noise_);
 }
 
 void NoiEst::LowMaskCorrelation() {
-  rm_low_ = CrossCorrelation(m_low_, m_low_);
+  rm_low_ = Correlation(m_low_, m_low_);
 }
 
 void NoiEst::HighMaskCorrelation() {
-  rm_high_ = CrossCorrelation(m_high_, m_high_);
+  rm_high_ = Correlation(m_high_, m_high_);
 }
 
 const cv::Mat NoiEst::AutoCorrelation(const cv::Mat& noise, const cv::Mat& mask) {
@@ -471,43 +398,4 @@ const void NoiEst::DefaultSave() {
   Save(nps_high_, "nps_high");
   Save(nps_low_r_, "nps_low_r");
   Save(nps_high_r_, "nps_high_r");
-}
-
-cv::Mat AddRandomNoise(cv::Mat image, float noise_intensity) {
-  cv::Mat noise(image.size(), image.type());
-  cv::randn(noise, noise_intensity, 2 * noise_intensity);
-
-  image += noise;
-  return image;
-}
-
-std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
-  std::vector<cv::Mat> noisy_images;
-
-  float intense = 50.0;
-
-  for (int i = 0; i < amount; i += 1) {
-    cv::Mat noisy_image = cv::Mat::zeros(image.size(), CV_32FC1);
-    image.copyTo(noisy_image);
-
-    noisy_image = AddRandomNoise(noisy_image, intense);
-    noisy_images.push_back(noisy_image);
-  }
-
-  return noisy_images;
-};
-
-int main() {
-  cv::Mat image = cv::imread("cat.png", cv::IMREAD_GRAYSCALE);
-  cv::Mat image_32f = cv::Mat::zeros(image.size(), CV_32FC1);
-  image.convertTo(image_32f, CV_32FC1);
-
-  const int amount = 21;
-  std::vector<cv::Mat> ensemble = std::move(CreateEnsemble(image_32f, amount));
-  image_32f = ensemble[0];
-
-  NoiEst alg = NoiEst(image_32f, ensemble, amount);
-  alg.Calculate();
-  alg.DefaultSave();
-  return 0;
 }
