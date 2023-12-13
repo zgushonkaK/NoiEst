@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <random>
+#include <cmath>
 #include <opencv2/opencv.hpp>
 #include "noi_est.hpp"
 
@@ -8,6 +10,29 @@ cv::Mat AddRandomNoise(cv::Mat image, float noise_intensity) {
   cv::randn(noise, noise_intensity, 2 * noise_intensity);
 
   image += noise;
+  return image;
+}
+
+cv::Mat addGaussianNoise(cv::Mat image)
+{
+  std::default_random_engine generator;
+
+  for (int i = 0; i < image.rows; i++)
+  {
+    for (int j = 0; j < image.cols; j++)
+    {
+      float sigma = std::abs(std::sin(i));
+
+      sigma = 0.1 + (sigma + 1.0) * 0.3;
+      std::normal_distribution<float> distribution(0.0, sigma);
+
+      float noise = distribution(generator);
+
+      float pixel = image.at<float>(i, j);
+      image.at<float>(i, j) = pixel + noise;
+    }
+  }
+
   return image;
 }
 
@@ -20,7 +45,8 @@ std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
     cv::Mat noisy_image = cv::Mat::zeros(image.size(), CV_32FC1);
     image.copyTo(noisy_image);
 
-    noisy_image = AddRandomNoise(noisy_image, intense);
+    //noisy_image = AddRandomNoise(noisy_image, intense);
+    noisy_image = addGaussianNoise(noisy_image);
     noisy_images.push_back(noisy_image);
   }
 
@@ -32,7 +58,7 @@ int main(int argc, char* argv[]) {
   cv::Mat image_32f = cv::Mat::zeros(image.size(), CV_32FC1);
   image.convertTo(image_32f, CV_32FC1);
 
-  const int amount = 21;
+  const int amount = 50;
   std::vector<cv::Mat> ensemble = std::move(CreateEnsemble(image_32f, amount));
   image_32f = ensemble[0];
 
