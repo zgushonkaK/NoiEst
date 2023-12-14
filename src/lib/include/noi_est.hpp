@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _NOI_EST_HPP_
+#define _NOI_EST_HPP_
+
 #include <iostream>
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -225,3 +227,5 @@ public:
   */
   void SetThresh(float thresh);
 };
+
+#endif //_NOI_EST_HPP_

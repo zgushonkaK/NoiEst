@@ -111,7 +111,7 @@ void NoiEst::ImageNoise() {
   cv::subtract(img_8bit, ens_8bit, noise_8bit);
   noise_8bit.convertTo(noise, CV_32FC1);
 
-  noise_ = noise;
+  noise_ = image_32f_ - ens_mean_;
 }
 
 cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
@@ -288,6 +288,7 @@ void NoiEst::HighDft() {
 
 const cv::Mat NoiEst::RadialPlot(const cv::Mat& image) {
   cv::Mat nps_hist = cv::Mat::zeros(1, image.cols, CV_32FC1);
+  std::vector<int> cnt(image.cols, 0);
   int width = image.cols;
   int height = image.rows;
 
@@ -301,6 +302,7 @@ const cv::Mat NoiEst::RadialPlot(const cv::Mat& image) {
       int r = std::sqrt(std::abs(x_center - x) * std::abs(x_center - x) + std::abs(y_center - y) * std::abs(y_center - y));
       float nps_val = image.at<float>(cv::Point(x, y));
       nps.at<float>(r) += nps_val;
+      cnt[r] += 1;
     }
   }
 
