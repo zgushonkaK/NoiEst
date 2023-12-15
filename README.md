@@ -117,71 +117,142 @@ $|\mathcal{F}[]|$ - величина дискретного преобразов
  ![visualisation](pics/visualisation.png)
 
 ## Результаты
+### Для однородного шума
 Исходное изображение: 
 
-![src_img](pics/results/source_img.png)
+![src_img](pics/results/uniform_noise/source_img.png)
 
 
 Среднее ансамбля: 
 
-![ens_mean](pics/results/ens_mean.png)
+![ens_mean](pics/results/uniform_noise/ens_mean.png)
 
 
 Шум изображения: 
 
-![noise](pics/results/noise.png)
+![noise](pics/results/uniform_noise/noise.png)
 
 
 Карта шумов: 
 
-![noise_map](pics/results/noise_map.png)
+![noise_map](pics/results/uniform_noise/noise_map.png)
 
 
 Гистограмма шумов: 
 
-![noise_hist](pics/results/noise_hist.png)
+![noise_hist](pics/results/uniform_noise/noise_hist.png)
 
 
 Область интереса (ROI): 
 
-![roi](pics/results/roi.png)
+![roi](pics/results/uniform_noise/roi.png)
 
 Маска с низким шумом:
 
-![m_low](pics/results/m_low.png)
+![m_low](pics/results/uniform_noise/m_low.png)
 
 Маска с высоким шумом:
 
-![m_high](pics/results/m_high.png)
+![m_high](pics/results/uniform_noise/m_high.png)
 
 Область с низким шумом:
 
-![n_low](pics/results/n'_low.png)
+![n_low](pics/results/uniform_noise/n'_low.png)
 
 Область с высоким шумом:
 
-![n_high](pics/results/n'_high.png)
+![n_high](pics/results/uniform_noise/n'_high.png)
 
 Автокорреляция области с низким шумом:
 
-![r_low](pics/results/r_low.png)
+![r_low](pics/results/uniform_noise/r_low.png)
 
 Автокорреляция области с высоким шумом:
 
-![r_high](pics/results/r_high.png)
+![r_high](pics/results/uniform_noise/r_high.png)
 
 Дискретное преобразование Фурье низкого шума:
 
-![nps_low](pics/results/nps_low.png)
+![nps_low](pics/results/uniform_noise/nps_low.png)
 
 Дискретное преобразование Фурье высокого шума:
 
-![nps_high](pics/results/nps_high.png)
+![nps_high](pics/results/uniform_noise/nps_high.png)
 
 Кривая спектра низкого шума:
 
-![nps_low_r](pics/results/nps_low_r.png)
+![nps_low_r](pics/results/uniform_noise/nps_low_r.png)
 
 Кривая спектра высокого шума:
 
-![nps_high_r](pics/results/nps_high_r.png)
+![nps_high_r](pics/results/uniform_noise/nps_high_r.png)
+
+### Для неоднородного шума
+Исходное изображение: 
+
+![src_img](pics/results/non-uniform_noise/source_img.png)
+
+
+Среднее ансамбля: 
+
+![ens_mean](pics/results/non-uniform_noise/ens_mean.png)
+
+
+Шум изображения: 
+
+![noise](pics/results/non-uniform_noise/noise.png)
+
+
+Карта шумов: 
+
+![noise_map](pics/results/non-uniform_noise/noise_map.png)
+
+
+Гистограмма шумов: 
+
+![noise_hist](pics/results/non-uniform_noise/noise_hist.png)
+
+
+Область интереса (ROI): 
+
+![roi](pics/results/non-uniform_noise/roi.png)
+
+Маска с низким шумом:
+
+![m_low](pics/results/non-uniform_noise/m_low.png)
+
+Маска с высоким шумом:
+
+![m_high](pics/results/non-uniform_noise/m_high.png)
+
+Область с низким шумом:
+
+![n_low](pics/results/non-uniform_noise/n'_low.png)
+
+Область с высоким шумом:
+
+![n_high](pics/results/non-uniform_noise/n'_high.png)
+
+Автокорреляция области с низким шумом:
+
+![r_low](pics/results/non-uniform_noise/r_low.png)
+
+Автокорреляция области с высоким шумом:
+
+![r_high](pics/results/non-uniform_noise/r_high.png)
+
+Дискретное преобразование Фурье низкого шума:
+
+![nps_low](pics/results/non-uniform_noise/nps_low.png)
+
+Дискретное преобразование Фурье высокого шума:
+
+![nps_high](pics/results/non-uniform_noise/nps_high.png)
+
+Кривая спектра низкого шума:
+
+![nps_low_r](pics/results/non-uniform_noise/nps_low_r.png)
+
+Кривая спектра высокого шума:
+
+![nps_high_r](pics/results/non-uniform_noise/nps_high_r.png)
