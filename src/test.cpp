@@ -57,7 +57,7 @@ void AddGaussianNoiseEns(std::vector<cv::Mat>& ensemble) {
 
   for (int i = 0; i < height; i += 1) {
     for (int j = 0; j < width; j += 1) {
-      float sigma = std::abs(std::sin(i + j));
+      float sigma = std::abs(std::sin(i + j)*i);
 
       for (int k = 0; k < ensemble.size(); k += 1) {
         std::normal_distribution<float> distribution{ 0.0, sigma };
@@ -87,7 +87,7 @@ std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
 };
 
 int main(int argc, char* argv[]) {
-  cv::Mat image = cv::imread("cat.png", cv::IMREAD_GRAYSCALE);
+  cv::Mat image = cv::imread("grid.png", cv::IMREAD_GRAYSCALE);
   cv::Mat image_32f = cv::Mat::zeros(image.size(), CV_32FC1);
   image.convertTo(image_32f, CV_32FC1);
 
