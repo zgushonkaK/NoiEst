@@ -26,6 +26,7 @@ cv::Mat AddRandomNoise(cv::Mat image, float noise_intensity) {
   return image;
 }
 
+/*
 cv::Mat AddGaussianNoise(cv::Mat& image) {
   std::default_random_engine generator;
   cv::Mat sigma_map(image.size(), image.type());
@@ -47,7 +48,26 @@ cv::Mat AddGaussianNoise(cv::Mat& image) {
   
   //Save(sigma_map, "sigma");
   return image;
+}*/
+
+void AddGaussianNoiseEns(std::vector<cv::Mat>& ensemble) {
+  std::default_random_engine generator;
+  int width = ensemble[0].cols;
+  int height = ensemble[0].rows;
+
+  for (int i = 0; i < height; i += 1) {
+    for (int j = 0; j < width; j += 1) {
+      float sigma = std::abs(std::sin(i + j));
+
+      for (int k = 0; k < ensemble.size(); k += 1) {
+        std::normal_distribution<float> distribution{ 0.0, sigma };
+        float noise = std::abs(distribution(generator));
+        ensemble[k].at<float>(cv::Point(i, j)) += noise;
+      }
+    }
+  }
 }
+
 
 std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
   std::vector<cv::Mat> noisy_images;
@@ -59,7 +79,7 @@ std::vector<cv::Mat> CreateEnsemble(const cv::Mat& image, const int& amount) {
     image.copyTo(noisy_image);
 
     //noisy_image = AddRandomNoise(noisy_image, intense);
-    noisy_image = AddGaussianNoise(noisy_image);
+    //noisy_image = AddGaussianNoise(noisy_image);
     noisy_images.push_back(noisy_image);
   }
 
@@ -73,7 +93,9 @@ int main(int argc, char* argv[]) {
 
   const int amount = 25;
   std::vector<cv::Mat> ensemble = std::move(CreateEnsemble(image_32f, amount));
+  AddGaussianNoiseEns(ensemble);
   image_32f = ensemble[0];
+  //GridImage(image_32f);
 
   NoiEst alg = NoiEst(image_32f, ensemble, amount);
   
