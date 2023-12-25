@@ -19,7 +19,7 @@ private:
   std::vector<cv::Mat> ensemble_;
 
   //! Порог
-  float thresh_ = 0.5;
+  float thresh_ = 0.4;
   //! Присваиваемое максимальное значение при разделении по порогу
   float max_val_ = 1.0;
 
@@ -31,7 +31,9 @@ private:
   cv::Mat noise_hist_;
   //! Изображение с нулевым средним шумом
   cv::Mat noise_;
-  //! Маска области интереса
+  //! Маска по умолчанию
+  cv::Mat mask_;
+  //! Область интереса
   cv::Mat roi_;
   //! Изображение с низким шумом
   cv::Mat n_low_;
@@ -64,7 +66,10 @@ private:
 
 public:
   //! Конструктор
-  NoiEst(cv::Mat image_32f, std::vector<cv::Mat> ensemble, int amount);
+  NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount);
+
+  //! Конструктор
+  NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount, const cv::Mat& mask);
 
   //! Деструктор
   ~NoiEst();
@@ -89,18 +94,19 @@ public:
   * @brief Создаёт изображение с нулевым средним шумом
   */
   void ImageNoise();
- 
-  //! @private
-  cv::Mat RoundRoi(const cv::Mat& image_32f);
   
   /*!
   * @brief Выделяет область интереса
-  * исходного изображения
-  * @details Применяет к изображению маску:
-  * круг с внешним радиусом 120 пикселей и внутренним 40
+  * исходного изображения в соответствии
+  * с маской по умолчанию
   */
-  void OrigRoi();
-  
+  void Roi();
+
+  /*!
+  * @brief Устанавливает значение маски по умолчанию
+  */
+  void SetRoiMask(const cv::Mat& mask);
+
   /*!
   * @brief Создаёт гистограмму шума
   */
@@ -120,6 +126,7 @@ public:
   * @brief Получает изображение с низким шумом в области интереса
   */
   void LowNoise();
+
 
   /*!
   * @brief Получает изображение с высоким шумом в области интереса
@@ -226,6 +233,13 @@ public:
   * @brief Позволяет установить порог
   */
   void SetThresh(float thresh);
+
+private:
+  cv::Mat Roi(const cv::Mat& image_32f);
+
+  cv::Mat Roi(const cv::Mat& image_32f, const cv::Mat& mask);
+
+
 };
 
 #endif //_NOI_EST_HPP_

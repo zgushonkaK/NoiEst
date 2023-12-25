@@ -1,9 +1,10 @@
 #include "noi_est.hpp"
 
-NoiEst::NoiEst(cv::Mat image_32f, std::vector<cv::Mat> ensemble, int amount) {
+NoiEst::NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount, const cv::Mat& mask) {
   image_32f_ = image_32f;
   ensemble_ = ensemble;
   amount_ = amount;
+  mask_ = mask;
 }
 
 NoiEst::~NoiEst() {
@@ -114,7 +115,12 @@ void NoiEst::ImageNoise() {
   noise_ = image_32f_ - ens_mean_;
 }
 
-cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
+void NoiEst::SetRoiMask(const cv::Mat& mask) {
+  mask_ = mask;
+}
+
+/*
+cv::Mat NoiEst::OrigRoi(const cv::Mat& image_32f) {
   cv::Mat image;
   image_32f.convertTo(image, CV_8U);
   cv::Mat out_circle = cv::Mat::zeros(image.size(), image.type());
@@ -137,9 +143,35 @@ cv::Mat NoiEst::RoundRoi(const cv::Mat& image_32f) {
 
   return roi_img;
 }
+*/
 
-void NoiEst::OrigRoi() {
-  roi_ = RoundRoi(mat2gray(noise_));
+cv::Mat NoiEst::Roi(const cv::Mat& image_32f) {
+  cv::Mat image;
+  cv::normalize(image_32f, image, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+
+  cv::Mat roi_img = cv::Mat::zeros(image.size(), image.type());
+  cv::bitwise_and(image, mask_, roi_img);
+  roi_img.convertTo(roi_img, CV_32FC1);
+
+  return roi_img;
+}
+
+
+cv::Mat NoiEst::Roi(const cv::Mat& image_32f, const cv::Mat& mask_32f) {
+  cv::Mat image;
+  cv::normalize(image_32f, image, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+  cv::Mat mask;
+  cv::normalize(mask_32f, mask, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+
+  cv::Mat roi_img = cv::Mat::zeros(image.size(), image.type());
+  cv::bitwise_and(image, mask, roi_img);
+  roi_img.convertTo(roi_img, CV_32FC1);
+
+  return roi_img;
+}
+
+void NoiEst::Roi() {
+  roi_ = Roi(mat2gray(noise_));
 }
 
 void NoiEst::LowNoiseMask() {
@@ -147,7 +179,7 @@ void NoiEst::LowNoiseMask() {
   cv::Mat mask_low;
   cv::threshold(noise_map_, thresh_mask_low, thresh_, max_val_, cv::THRESH_BINARY_INV);
 
-  mask_low = RoundRoi(thresh_mask_low);
+  mask_low = Roi(thresh_mask_low);
   m_low_ = mask_low;
 }
 
@@ -156,7 +188,7 @@ void NoiEst::HighNoiseMask() {
   cv::Mat mask_high;
   cv::threshold(noise_map_, thresh_mask_high, thresh_, max_val_, cv::THRESH_BINARY);
 
-  mask_high = RoundRoi(thresh_mask_high);
+  mask_high = Roi(thresh_mask_high);
   m_high_ = mask_high;
 }
 
@@ -194,11 +226,11 @@ const cv::Mat NoiEst::Correlation(const cv::Mat& image1, const cv::Mat& image2) 
 }
 
 void NoiEst::LowNoiseCorrelation() {
-  rn_low_ = Correlation(n_low_, noise_);
+  rn_low_ = Correlation(Roi(n_low_, m_low_), Roi(n_low_, m_low_));
 }
 
 void NoiEst::HighNoiseCorrelation() {
-  rn_high_ = Correlation(n_high_, noise_);
+  rn_high_ = Correlation(Roi(n_high_, n_high_), Roi(n_high_, n_high_));
 }
 
 void NoiEst::LowMaskCorrelation() {
@@ -274,7 +306,6 @@ const cv::Mat NoiEst::Dft(const cv::Mat& image_32f) {
   tmp.copyTo(q2);
 
   cv::normalize(mag_img, mag_img, 0, 1, cv::NORM_MINMAX);
-  cv::Mat roi_mag = RoundRoi(mag_img);
   return mag_img;
 }
 
@@ -335,7 +366,7 @@ const void NoiEst::Calculate() {
   EnsembleMean();
   CreateNoiseMap();
   ImageNoise();
-  OrigRoi();
+  Roi();
   NoiseHist();
   LowNoiseMask();
   HighNoiseMask();
