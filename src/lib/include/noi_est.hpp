@@ -103,7 +103,7 @@ public:
   void Roi();
 
   /*!
-  * @brief Устанавливает значение маски по умолчанию
+  * @brief Устанавливает значение маски для выделения области интереса
   */
   void SetRoiMask(const cv::Mat& mask);
 
@@ -230,7 +230,7 @@ public:
   const void DefaultSave();
 
   /*!
-  * @brief Позволяет установить порог
+  * @brief Устанавливает порог для разделения по частоте шума
   */
   void SetThresh(float thresh);
 

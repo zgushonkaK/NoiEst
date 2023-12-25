@@ -16,7 +16,6 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 add_subdirectory(src)
 
 install(FILES pics/cat.png DESTINATION bin)
-install(FILES pics/grid.png DESTINATION bin)
 install(TARGETS test_app DESTINATION bin)
 
 find_package(Doxygen)
