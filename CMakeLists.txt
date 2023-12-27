@@ -32,10 +32,6 @@ install(DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/
         PATTERN "*.dll"
         PATTERN "*.so")
 
-file(GLOB RESOURCES "cat.png")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/pics/cat.png
-   ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-
 if (DOXYGEN_FOUND)
 # set input and output files
 set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)

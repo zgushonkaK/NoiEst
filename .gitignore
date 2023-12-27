@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+bin.dbg
+bin.rel
+bin.relwithdbg
+build
+.vs
+out
+doc
+noi_est
+.obsidian
