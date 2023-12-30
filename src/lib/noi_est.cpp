@@ -1,5 +1,11 @@
 #include "noi_est.hpp"
 
+NoiEst::NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount) {
+  image_32f_ = image_32f;
+  ensemble_ = ensemble;
+  amount_ = amount;
+}
+
 NoiEst::NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount, const cv::Mat& mask) {
   image_32f_ = image_32f;
   ensemble_ = ensemble;
@@ -116,32 +122,6 @@ void NoiEst::ImageNoise() {
 void NoiEst::SetRoiMask(const cv::Mat& mask) {
   mask_ = mask;
 }
-
-/*
-cv::Mat NoiEst::OrigRoi(const cv::Mat& image_32f) {
-  cv::Mat image;
-  image_32f.convertTo(image, CV_8U);
-  cv::Mat out_circle = cv::Mat::zeros(image.size(), image.type());
-  cv::Mat in_circle = cv::Mat::zeros(image.size(), image.type());
-  cv::Mat mask = cv::Mat::zeros(image.size(), image.type());
-
-  cv::Mat roi_img_8bit = cv::Mat::zeros(image.size(), image.type());
-  cv::Mat roi_img = cv::Mat::zeros(image_32f_.size(), image_32f_.type());
-
-  double r_out = 120;
-  double r_in = 40;
-
-  cv::circle(out_circle, cv::Point(mask.cols / 2, mask.rows / 2), r_out, (255, 255, 255), cv::FILLED);
-  cv::circle(in_circle, cv::Point(mask.cols / 2, mask.rows / 2), r_in, (255, 255, 255), cv::FILLED);
-
-  cv::subtract(out_circle, in_circle, mask);
-
-  image.copyTo(roi_img_8bit, mask);
-  roi_img_8bit.convertTo(roi_img, CV_32FC1);
-
-  return roi_img;
-}
-*/
 
 cv::Mat NoiEst::Roi(const cv::Mat& image_32f) {
   cv::Mat image;
