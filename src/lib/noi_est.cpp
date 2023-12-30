@@ -1,11 +1,5 @@
 #include "noi_est.hpp"
 
-NoiEst::NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount) {
-  image_32f_ = image_32f;
-  ensemble_ = ensemble;
-  amount_ = amount;
-}
-
 NoiEst::NoiEst(const cv::Mat image_32f, const std::vector<cv::Mat> ensemble, const int amount, const cv::Mat& mask) {
   image_32f_ = image_32f;
   ensemble_ = ensemble;
